@@ -2,7 +2,28 @@ import numpy as np
 import cv2
 import os
 import time
+import argparse
 import tensorflow as tf
+
+# For using GPU or CPU
+parser = argparse.ArgumentParser(description='Set GPU usage for TensorFlow')
+parser.add_argument('--use_gpu', action='store_true', help='Use GPU if available')
+args = parser.parse_args()
+
+if args.use_gpu:
+    gpus = tf.config.list_physical_devices('GPU')
+    if gpus:
+        try:
+            for gpu in gpus:
+                tf.config.experimental.set_memory_growth(gpu, True)
+            print("GPU is enabled and configured.")
+        except RuntimeError as e:
+            print(e)
+    else:
+        print("No GPU devices found.")
+else:
+    print("GPU usage is disabled. Running on CPU.")
+
 
 # Constants
 MODEL_PATH = "flower_model.h5"
